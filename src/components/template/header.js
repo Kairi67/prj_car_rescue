@@ -30,13 +30,13 @@ const HeaderWrp = styled.div`
   }
   .buttonsNew {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     button {
-      margin-bottom: 4px;
+      margin-right: 10px;
       padding-right: 20px;
       padding-left: 20px;
       &:last-child {
-        margin-bottom: 0;
+        margin-right: 0;
       }
     }
   }
@@ -71,15 +71,24 @@ const HeaderWrp = styled.div`
   }
 `;
 
-export default function Header({ versionName, children }) {
+export default function Header({ children }) {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+
+  const time = () => {
+    const date = new Date();
+    return date.toLocaleString();
+  };
+
+  const intervalId = setInterval(() => {
+    time();
+  }, 1000);
+
+  console.log(intervalId);
   return (
     <HeaderWrp>
       <div className='inner'>
-        <p className='version'>
-          <span className='versionText'>現在表示中のバージョン</span>
-          {versionName}
-        </p>
+        <p className='version'>カーレスキュー静清</p>
+        <p className='version'>{time()}</p>
         {children}
         <div className='user'>
           <Avatar

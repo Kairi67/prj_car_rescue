@@ -1,9 +1,8 @@
-import styled from "styled-components";
-import { Table } from "antd";
+import styled from 'styled-components';
+import { Table } from 'antd';
 
 const TableLineupComponent = styled(Table)`
-  margin-top: 30px;
-  margin-left: 10px;
+  margin: 30px;
   border: 1px solid #CDD6DD;
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
