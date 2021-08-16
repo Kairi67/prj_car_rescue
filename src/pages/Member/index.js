@@ -1,97 +1,81 @@
-import { Layout, Table, Tag, Radio, Space } from 'antd';
+import React, { useState, useEffect } from 'react';
 import {
-  AppstoreOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  ShopOutlined,
-  TeamOutlined,
-  UserOutlined,
-  UploadOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
+  Layout,
+  Table,
+  DatePicker,
+  Modal,
+  Space,
+  Typography,
+  Button,
+  Menu,
+} from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
-const { Header, Content, Footer, Sider } = Layout;
+import { useAuth0 } from '@auth0/auth0-react';
+import styled from 'styled-components';
+import { memberListColumn } from '../../constants/column';
+// import { rootPath, envList } from '../../../constants';
+import Header from '../../components/template/header';
+import SideNav from '../../components/template/sidenav';
+import { table2, minifyRecords } from '../../api';
+import {
+  TableLineup,
+  ButtonDefault,
+  ButtonSub,
+} from '../../components/modules';
 
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (tags) => (
-      <span>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </span>
-    ),
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (text, record) => (
-      <Space size='middle'>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
+const { SubMenu } = Menu;
+const { Content, Sider } = Layout;
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
+const ModalFooterWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  .rightBtn {
+    display: flex;
+    justify-content: flex-end;
+  }
+`;
 
-const Home = () => {
+const InnerSection = styled.div`
+  margin-bottom: -10px;
+  > .item {
+    margin-bottom: 10px;
+  }
+`;
+
+const MemberPage = () => {
+  const { user } = useAuth0();
+  const [itemList, setItemList] = useState([]);
+
+  useEffect(() => {
+    handleGetRecordsAction();
+  }, []);
+
+  const handleGetRecordsAction = async () => {
+    await table2.select({ maxRecords: 50 }).eachPage((response) => {
+      const itemList = response.map((item) => item.fields);
+      setItemList(itemList);
+    });
+  };
+
   return (
-    <Layout>
-      <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-        <Table columns={columns} dataSource={data} />
-      </Content>
-    </Layout>
+    itemList && (
+      <Layout.Content
+        className='site-layout-background'
+        style={{ marginLeft: 240, padding: '24px 36px', minHeight: 480 }}
+      >
+        {' '}
+        <Typography.Title level={3}>隊員リスト</Typography.Title>
+        <Table
+          pagination={{ pageSize: 100 }}
+          dataSource={itemList}
+          columns={memberListColumn}
+        />
+      </Layout.Content>
+    )
   );
 };
 
-export default Home;
+export default MemberPage;

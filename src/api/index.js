@@ -3,7 +3,8 @@ const base = new Airtable({
   apiKey: process.env.REACT_APP_AIRTABLE_API_KEY,
 }).base(process.env.REACT_APP_AIRTABLE_BASE_ID);
 
-const table = base('OrderList');
+const orderTable = base('OrderList');
+const table2 = base('MemberList');
 
 const minifyRecords = (records) => {
   console.log(records);
@@ -16,4 +17,4 @@ const minifyRecords = (records) => {
   });
 };
 
-export { table, minifyRecords };
+export { orderTable, table2, minifyRecords };
