@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useAuth0 } from '@auth0/auth0-react';
-import { Avatar, DatePicker, Modal, Space, Button } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import { interval } from 'rxjs';
-import dayjs from 'dayjs';
-import ja from 'dayjs/locale/ja';
-import { ButtonPrimary, ButtonDefault } from '../../components/modules';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import moment from "moment";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Avatar, DatePicker, Modal, Space, Button } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import { interval } from "rxjs";
+import dayjs from "dayjs";
+import ja from "dayjs/locale/ja";
+import { ButtonPrimary, ButtonDefault } from "../../components/modules";
 dayjs.locale(ja);
 
 const HeaderWrp = styled.div`
@@ -14,7 +15,8 @@ const HeaderWrp = styled.div`
   background: linear-gradient(-90deg, #2f54eb, #3b96b7);
   color: #fff;
   padding: 12px 5px;
-  /* position: fixed; */
+  position: fixed;
+  z-index: 9999;
   .inner {
     min-width: 1000px;
     width: 100%;
@@ -71,7 +73,8 @@ const InnerSection = styled.div`
 export default function Header({ children }) {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const [date, setDate] = useState(new Date());
-  const [dateTime, setDateTime] = useState('');
+  const [dateTime, setDateTime] = useState("");
+  const [referenceDateTime, setReferenceDateTime] = useState("");
   const [modalState, setModalState] = useState(false);
 
   useEffect(() => {
@@ -83,15 +86,23 @@ export default function Header({ children }) {
 
   const fixDisplayTime = (num) => {
     let ret;
-    num < 10 ? (ret = '0' + num) : (ret = num);
+    num < 10 ? (ret = "0" + num) : (ret = num);
     return ret;
+  };
+
+  const settingDateTime = (setDateTime) => {
+    const dateIsValid = moment(setDateTime).isValid();
+    const newDateTime = dateIsValid
+      ? moment(setDateTime).format("YYYY-MM-DD")
+      : "";
+    setReferenceDateTime(newDateTime);
   };
 
   return (
     <HeaderWrp>
-      <div className='inner'>
-        <p className='version'>カーレスキュー静清</p>
-        <p className='version'>
+      <div className="inner">
+        <p className="version">カーレスキュー静清</p>
+        <p className="version">
           {`${fixDisplayTime(date.getHours())}:${fixDisplayTime(
             date.getMinutes()
           )}:${fixDisplayTime(date.getSeconds())}`}
@@ -101,13 +112,13 @@ export default function Header({ children }) {
           表示日変更
         </ButtonDefault>
         <Modal
-          title='表示基準日変更'
+          title="表示基準日変更"
           visible={modalState}
           closable={false}
           footer={
             <div>
               <Button
-                key='Cancel'
+                key="Cancel"
                 onClick={() => {
                   setModalState(false);
                 }}
@@ -115,9 +126,10 @@ export default function Header({ children }) {
                 キャンセル
               </Button>
               <Button
-                key='okChangeDate'
-                type='primary'
+                key="okChangeDate"
+                type="primary"
                 onClick={() => {
+                  settingDateTime(dateTime);
                   setModalState(false);
                 }}
               >
@@ -127,15 +139,15 @@ export default function Header({ children }) {
           }
         >
           <InnerSection>
-            <div className='item'>
-              <div className='title'>表示基準日</div>
+            <div className="item">
+              <div className="title">表示基準日</div>
             </div>
-            <div className='item'>
+            <div className="item">
               <Space>
                 <DatePicker
-                  placeholder='YYYY/MM/DD'
-                  format='YYYY/MM/DD'
-                  // showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+                  placeholder="YYYY/MM/DD"
+                  format="YYYY/MM/DD"
+                  showTime={{ defaultValue: moment("00:00:00", "HH:mm:ss") }}
                   onChange={(dateTime) => {
                     setDateTime(dateTime);
                   }}
@@ -144,17 +156,17 @@ export default function Header({ children }) {
             </div>
           </InnerSection>
         </Modal>
-        <div className='user'>
+        <div className="user">
           <Avatar
             style={{
-              backgroundColor: 'transparent',
-              border: '2px solid #fff',
-              height: '34px',
-              width: '34px',
+              backgroundColor: "transparent",
+              border: "2px solid #fff",
+              height: "34px",
+              width: "34px",
             }}
             icon={<UserOutlined />}
           />
-          <p className='userName'>admin</p>
+          <p className="userName">admin</p>
         </div>
         {isAuthenticated ? (
           <ButtonPrimary

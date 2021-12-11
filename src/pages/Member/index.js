@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Layout,
   Table,
@@ -8,21 +8,21 @@ import {
   Typography,
   Button,
   Menu,
-} from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+} from "antd";
+import { UserOutlined } from "@ant-design/icons";
 
-import { useAuth0 } from '@auth0/auth0-react';
-import styled from 'styled-components';
-import { memberListColumn } from '../../constants/column';
+import { useAuth0 } from "@auth0/auth0-react";
+import styled from "styled-components";
+import { memberListColumn } from "../../constants/column";
 // import { rootPath, envList } from '../../../constants';
-import Header from '../../components/template/header';
-import SideNav from '../../components/template/sidenav';
-import { table2, minifyRecords } from '../../api';
+import Header from "../../components/template/header";
+import SideNav from "../../components/template/sidenav";
+import { table2, minifyRecords } from "../../api";
 import {
   TableLineup,
   ButtonDefault,
   ButtonSub,
-} from '../../components/modules';
+} from "../../components/modules";
 
 const { SubMenu } = Menu;
 const { Content, Sider } = Layout;
@@ -63,10 +63,13 @@ const MemberPage = () => {
   return (
     itemList && (
       <Layout.Content
-        className='site-layout-background'
-        style={{ marginLeft: 240, padding: '24px 36px', minHeight: 480 }}
+        className="site-layout-background"
+        style={{
+          marginLeft: 240,
+          padding: "90px 36px 0px",
+          minHeight: "100vh",
+        }}
       >
-        {' '}
         <Typography.Title level={3}>隊員リスト</Typography.Title>
         <Table
           pagination={{ pageSize: 100 }}

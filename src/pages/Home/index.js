@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Layout, Table, Typography, Button, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import dayjs from 'dayjs';
-import ja from 'dayjs/locale/ja';
-import { orderTable, minifyRecords } from '../../api';
-import { addKey } from '../../utils';
-import { orderListColumn } from '../../constants/column';
-import { DataOriginContext } from 'src/controller/dataOriginContext';
+import React, { useState, useEffect, useContext } from "react";
+import { Layout, Table, Typography, Button, Modal } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
+import ja from "dayjs/locale/ja";
+import { orderTable, minifyRecords } from "../../api";
+import { addKey } from "../../utils";
+import { orderListColumn } from "../../constants/column";
+import { DataOriginContext } from "src/controller/dataOriginContext";
 dayjs.locale(ja);
 
 const OrderPage = () => {
   // const { itemList } = useContext(DataOriginContext);
   // console.log(itemList);
   const [itemList, setItemList] = useState([]);
-  const [dateTime, setDateTime] = useState(dayjs().format('YYYY/MM/DD'));
+  const [dateTime, setDateTime] = useState(dayjs().format("YYYY/MM/DD"));
 
   useEffect(() => {
     handleGetRecordsAction();
@@ -29,7 +29,7 @@ const OrderPage = () => {
         .eachPage((response) => {
           const newItemList = response.map((item) => {
             const newRecord = item.fields;
-            newRecord['target_id'] = item.id;
+            newRecord["target_id"] = item.id;
             return newRecord;
           });
           setItemList(newItemList);
@@ -45,12 +45,11 @@ const OrderPage = () => {
 
   const showConfirm = (id) => {
     Modal.confirm({
-      title: '本当に削除しますか？',
+      title: "本当に削除しますか？",
       icon: <ExclamationCircleOutlined />,
-      content: '出勤情報を削除します。',
+      content: "出勤情報を削除します。",
       onOk() {
         handleDeleteRecordAction(id);
-        window.location.reload();
       },
     });
   };
@@ -58,9 +57,9 @@ const OrderPage = () => {
   const columns = [
     ...orderListColumn,
     {
-      title: '操作',
-      dataIndex: '',
-      key: 'x',
+      title: "操作",
+      dataIndex: "",
+      key: "x",
       render: (item) => {
         return (
           <Button onClick={() => showConfirm(item.target_id)}>削除</Button>
@@ -72,8 +71,12 @@ const OrderPage = () => {
   return (
     itemList && (
       <Layout.Content
-        className='site-layout-background'
-        style={{ marginLeft: 240, padding: '24px 36px 0px', minHeight: '90vh' }}
+        className="site-layout-background"
+        style={{
+          marginLeft: 240,
+          padding: "90px 36px 0px",
+          minHeight: "100vh",
+        }}
       >
         <Typography.Title level={3}>{`表示日：${dateTime}`}</Typography.Title>
         <Table
